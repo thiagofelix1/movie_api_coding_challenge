@@ -1,0 +1,468 @@
+openapi: 3.0.2
+info:
+  title: 'Api de Comentários e Notas'
+  version: '1.0.0'
+  description: 'Api do sistema de comentários e notas desenvolvida para o Code Challlenge Itaú'
+paths:
+  /sign up:
+    post:
+      operationId: create_user
+      description: 'Cria o usuário com perfil de leitor e 0 pontos.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+      tags:
+      - signup
+  /sign in:
+    post:
+      operationId: login_user
+      description: 'Realiza o login do usuário e retorna o token que deve ser utilizado nas requisições.'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserLogin'
+          description: ''
+      tags:
+      - signin
+  /movie?title={title}:
+    get:
+      operationId: list_movies
+      description: 'Retorna as informações dos filmes e seus respectivos comentários, citações e nota média recebida pelo filme.'
+      security:
+        - ApiKeyAuth: [ token ]
+      parameters:
+        - in: path
+          name: title
+          required: true
+          schema:
+            type: string
+          style: matrix
+          explode: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieResponse'
+                items: { }
+          description: ''
+      tags:
+        - movie
+  /score:
+    post:
+      operationId: create_score
+      description: 'Adiciona nota a um filme, cada nota dada o usuário ganha 1 ponto.'
+      security:
+        - ApiKeyAuth: [token]
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Score'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScoreResponse'
+          description: ''
+      tags:
+      - score
+  /comment:
+    post:
+      operationId: create_comment
+      description: 'Adiciona um comentário a um filme, cada comentário realizado o usuário ganha 1 ponto. O usuário deve ter o perfil básico para realizar esta ação.'
+      security:
+        - ApiKeyAuth: [token]
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+          description: ''
+      tags:
+      - comment
+  /replay-comment:
+    post:
+      operationId: create_replay_comment
+      description: 'Responde um comentário'
+      security:
+        - ApiKeyAuth: [token]
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReplayComment'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReplayCommentResponse'
+          description: ''
+      tags:
+      - replay-comment
+  /like-comment:
+    post:
+      operationId: create_like_comment
+      description: 'Dar Like ou Dislike no comentário'
+      security:
+        - ApiKeyAuth: [token]
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/Like'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LikeResponse'
+          description: ''
+      tags:
+      - like-comment
+  /comment-repeat:
+    put:
+      operationId: mark_comment_repeat
+      description: 'Marcar comentário como repetido'
+      security:
+        - ApiKeyAuth: [token]
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/CommentRepeat'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/CommentRepeat'
+          description: ''
+      tags:
+      - comment-repeat
+  /comment-delete:
+    delete:
+      operationId: delete_comment
+      description: 'Deletar Comentário'
+      security:
+        - ApiKeyAuth: [token]
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/CommentDelete'
+      responses:
+        '204':
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/CommentDelete'
+          description: ''
+      tags:
+      - comment-delete
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: token
+
+  schemas:
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+          writeOnly: true
+      required:
+        - token
+    User:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        nickname:
+          type: string
+          maxLength: 20
+        first_name:
+          type: string
+          maxLength: 20
+        last_name:
+          type: string
+          maxLength: 50
+        password:
+          type: string
+          writeOnly: true
+        profile:
+          type: string
+          example: 'reader'
+          readOnly: true
+        points:
+          type: integer
+          readOnly: true
+      required:
+        - email
+        - nickname
+        - first_name
+        - last_name
+        - password
+    UserLogin:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        token:
+          type: string
+          readOnly: true
+      required:
+        - username
+        - password
+
+    PointsStatus:
+      type: object
+      properties:
+        add_points:
+          type: boolean
+          readOnly: true
+        nickname:
+          type: string
+          readOnly: true
+        points:
+          type: integer
+          readOnly: true
+        profile:
+          type: string
+          readOnly: true
+
+    Score:
+      type: object
+      properties:
+        movie_id:
+          type: string
+          writeOnly: true
+        score_value:
+          type: integer
+          writeOnly: true
+      required:
+        - movie_id
+        - score_value
+
+    ScoreResponse:
+      type: object
+      properties:
+        score_created:
+          type: boolean
+        add_points_status:
+          $ref: '#/components/schemas/PointsStatus'
+
+
+    Comment:
+      type: object
+      properties:
+        movie_id:
+          type: string
+        text_comment:
+          type: string
+      required:
+        - movie_id
+        - text_comment
+    CommentResponse:
+      type: object
+      properties:
+        comment_created:
+          type: boolean
+        add_points_status:
+          $ref: '#/components/schemas/PointsStatus'
+
+    ReplayComment:
+      type: object
+      properties:
+        comment_id:
+          type: string
+        text_replay_comment:
+          type: string
+      required:
+        - comment_id
+        - text_replay_comment
+
+    ReplayCommentResponse:
+      type: object
+      properties:
+        replay_comment_created:
+          type: boolean
+        add_points_status:
+          $ref: '#/components/schemas/PointsStatus'
+    
+    Like:
+      type: object
+      properties:
+        comment_id:
+          type: string
+        like_result:
+          type: boolean
+      required:
+        - comment_id
+        - like_result
+    
+    LikeResponse:
+      type: object
+      properties:
+        like_created:
+          type: boolean
+        like_result:
+          type: boolean
+
+    CommentRepeat:
+      type: object
+      properties:
+        comment_id:
+          type: string
+          writeOnly: true
+        status_mark_comment_repeat:
+          type: string
+          readOnly: true
+      required:
+        - comment_id
+
+    CommentDelete:
+      type: object
+      properties:
+        comment_id:
+          type: string
+          writeOnly: true
+        status_comment_delete:
+          type: string
+          readOnly: true
+      required:
+        - comment_id
+
+
+    MovieData:
+      type: object
+      properties:
+        Title:
+          type: string
+        Year:
+          type: string
+        id:
+          type: string
+        Released:
+          type: string
+        Runtime:
+          type: string
+        Genre:
+          type: string
+        Director:
+          type: string
+        Writer:
+          type: string
+        Actors:
+          type: string
+        Plot:
+          type: string
+
+    ReplayComments:
+      type: object
+      properties:
+        user_nickname:
+          type: string  
+        text_replay_comment:
+          type: string
+        date:
+          type: string
+          format: date-time
+    
+    Comments:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_nickname:
+          type: string  
+        text_comment:
+          type: string
+        date:
+          type: string
+          format: date-time
+        likes:
+          type: integer
+        dislikes:
+          type: integer
+        comment_repeat:
+          type: boolean
+        replay_comments:
+          $ref: '#/components/schemas/ReplayComments'
+    
+
+    Quotes:
+      type: object
+      properties:
+        comment__id:
+          type: integer  
+        comment__text_comment:
+          type: string
+        comment__user_nickname:
+          type: string
+        comment__date:
+          type: string
+          format: date-time
+        text_quote_comment:
+          type: string
+        user_nickname:
+          type: string
+        date:
+          type: string
+          format: date-time     
+
+
+    MovieResponse:
+      type: object
+      properties:
+        movie_data:
+          $ref: '#/components/schemas/MovieData'
+        score:
+          type: number
+        comments:
+          $ref: '#/components/schemas/Comments'
+        quotes:
+          $ref: '#/components/schemas/Quotes'
+
+
