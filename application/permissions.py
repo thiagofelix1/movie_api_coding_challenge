@@ -12,12 +12,14 @@ class IsAuthenticated(permissions.BasePermission):
         if not 'HTTP_TOKEN' in request.META:
             return False
         response_token_validate = validate_token_authorization_api(data={'token': request.META['HTTP_TOKEN']})
-
+    
         if 'error' in response_token_validate:
             raise ErrorConnectionAuthorizationApi()
-
+    
         if 'valid token' in response_token_validate:
-            return response_token_validate['valid token']
+            if response_token_validate['valid token']:
+                return True
+            raise TokenNotExists()
 
 class IsUserBasicPermissions(permissions.BasePermission):
     """

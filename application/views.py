@@ -25,6 +25,8 @@ def get_movie(request):
             ]
         })
     movie_data = get_movie_by_title(movie_title)
+    if "Error" in movie_data:
+        return Response(movie_data, status=status.HTTP_400_BAD_REQUEST)
     score_average = Score.objects.filter(movie_id=movie_data['id']).aggregate(
         Avg('score_value'))['score_value__avg']
     query_comments = Comment.objects.filter(movie_id=movie_data['id'])
@@ -114,7 +116,6 @@ def create_score(request):
     )
     add_points_response = authorization.add_points_user({
         'points': 1,
-        'key': 'e907826fa8b7e7899f48516b2a6758be',
         'token': user_data['token']
     })
     return Response({
@@ -147,7 +148,6 @@ def create_comment(request):
 
     add_points_response = authorization.add_points_user({
         'points': 1,
-        'key': 'e907826fa8b7e7899f48516b2a6758be',
         'token': user_data['token']
     })
 
@@ -178,7 +178,6 @@ def create_replay_comment(request):
 
     add_points_response = authorization.add_points_user({
         'points': 1,
-        'key': 'e907826fa8b7e7899f48516b2a6758be',
         'token': user_data['token']
     })
 
