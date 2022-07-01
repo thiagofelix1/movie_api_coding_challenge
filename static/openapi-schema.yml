@@ -429,7 +429,9 @@ components:
         comment_repeat:
           type: boolean
         replay_comments:
-          $ref: '#/components/schemas/ReplayComments'
+          type: array
+          items:
+            $ref: '#/components/schemas/ReplayComments'
     
 
     Quotes:
@@ -461,8 +463,12 @@ components:
         score:
           type: number
         comments:
-          $ref: '#/components/schemas/Comments'
+          type: array
+          items:
+              $ref: '#/components/schemas/Comments'
         quotes:
-          $ref: '#/components/schemas/Quotes'
+          type: array
+          items:
+            $ref: '#/components/schemas/Quotes'
 
 
