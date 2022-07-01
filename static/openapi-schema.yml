@@ -68,7 +68,7 @@ paths:
   /score:
     post:
       operationId: create_score
-      description: 'Adiciona nota a um filme, cada nota dada o usuário ganha 1 ponto.'
+      description: 'Adiciona nota de 0 a 10 a um filme, cada nota dada o usuário ganha 1 ponto.'
       security:
         - ApiKeyAuth: [token]
       parameters: []
@@ -110,7 +110,7 @@ paths:
   /replay-comment:
     post:
       operationId: create_replay_comment
-      description: 'Responde um comentário'
+      description: 'Responde um comentário, cada responta de comentário realizada o usuário ganha 1 ponto. O usuário deve ter o perfil básico para realizar esta ação.'
       security:
         - ApiKeyAuth: [token]
       parameters: []
@@ -131,7 +131,7 @@ paths:
   /like-comment:
     post:
       operationId: create_like_comment
-      description: 'Dar Like ou Dislike no comentário'
+      description: 'Dar Like ou Dislike em um comentário.O usuário deve ter o perfil avançado para realizar esta ação.'
       security:
         - ApiKeyAuth: [token]
       parameters: []
@@ -149,10 +149,31 @@ paths:
           description: ''
       tags:
       - like-comment
+  /comment-quote:
+    put:
+      operationId: create_quote_comment
+      description: 'Cita um comentário em um determinado filme.O usuário deve ter o perfil avançado para realizar esta ação.'
+      security:
+        - ApiKeyAuth: [token]
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/QuotesReplay'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/QuotesReplay'
+          description: ''
+      tags:
+      - comment-quote
   /comment-repeat:
     put:
       operationId: mark_comment_repeat
-      description: 'Marcar comentário como repetido'
+      description: 'Marcar comentário como repetido.O usuário deve ter o perfil moderador para realizar esta ação.'
       security:
         - ApiKeyAuth: [token]
       parameters: []
@@ -173,7 +194,7 @@ paths:
   /comment-delete:
     delete:
       operationId: delete_comment
-      description: 'Deletar Comentário'
+      description: 'Deletar Comentário.O usuário deve ter o perfil moderador para realizar esta ação.'
       security:
         - ApiKeyAuth: [token]
       parameters: []
@@ -280,6 +301,7 @@ components:
           writeOnly: true
         score_value:
           type: integer
+          maximum: 10
           writeOnly: true
       required:
         - movie_id
@@ -433,7 +455,25 @@ components:
           items:
             $ref: '#/components/schemas/ReplayComments'
     
-
+    QuotesReplay:
+      type: object
+      properties:
+        comment_id:
+          type: string  
+          writeOnly: true
+        text_quote_comment:
+          type: string
+          writeOnly: true
+        movie_id:
+          type: string
+          writeOnly: true
+        quote_created:
+          type: boolean
+          readOnly: true
+      required:
+        - comment_id
+        - text_quote_comment
+        - movie_id
     Quotes:
       type: object
       properties:

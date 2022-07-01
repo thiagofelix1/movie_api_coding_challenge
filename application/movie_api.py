@@ -28,7 +28,6 @@ def get_movie_by_title(title):
 
 def get_movie_by_id(id):
     url = f"https://www.omdbapi.com?&i={id}&apikey={API_KEY}"
-    url = url.replace(" ", "%20")
     response = urlopen(url)
     data_movie_json = json.loads(response.read())
     if "Error" in data_movie_json:
