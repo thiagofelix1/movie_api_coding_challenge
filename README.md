@@ -87,7 +87,7 @@ Running migrations:
 ```
 
 <p>Em seguida, podemos criar um superuser para verificar as informações sendo cadastradas no site de administração do django presente em 
-http://127.0.0.1:8000/admin/ , vale ressaltar que este usuário é apenas um usuário da API de filmes para acessar o site
+http://127.0.0.1:8080/admin/ , vale ressaltar que este usuário é apenas um usuário da API de filmes para acessar o site
 de administração e suas credências não conseguem ser 
 utilizadas nos endpoints pois ele não é registrado no Serviço de Autenticação </p>
 
@@ -110,6 +110,6 @@ Superuser created successfully.
 ```
 python3 manage.py runserver
 ```
-<p> Você verá que o serviço vai rodar no localhost na porta 8000, algo como http://127.0.0.1:8000/</p>
+<p> Você verá que o serviço vai rodar no localhost na porta 8080, algo como http://127.0.0.1:8080/</p>
 <p> A documentação da API, os endpoints de acesso e suas descrições assim como os parâmetros de autenticação e envio das informações 
-podem ser vistos na documenta da API, presente em http://127.0.0.1:8000/documentation</p>
+podem ser vistos na documenta da API, presente em http://127.0.0.1:8080/documentation</p>
