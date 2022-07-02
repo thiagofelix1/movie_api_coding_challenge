@@ -30,7 +30,7 @@ source venv/bin/activate
 
 ```
 python venv venv
-venv/Scripts/activate
+venv\Scripts\activate
 
 ```
 <h3>Instalando dependências e iniciando o serviço</h3>
@@ -86,15 +86,14 @@ Running migrations:
   Applying sessions.0001_initial... OK
 ```
 
-<p>Em seguida, podemos criar um superuser para verificar as informações sendo cadastradas no site de administração do django presente em 
-http://127.0.0.1:8080/admin/ , vale ressaltar que este usuário é apenas um usuário da API de filmes para acessar o site
+<p>Em seguida, podemos criar um superuser para verificar as informações sendo cadastradas no site de administração do django , vale ressaltar que este usuário é apenas um usuário da API de filmes para acessar o site
 de administração e suas credências não conseguem ser 
 utilizadas nos endpoints pois ele não é registrado no Serviço de Autenticação </p>
 
 <p>Após rodas as migrações você pode iniciar o serviço utilizando: </p>
 
 ```
-python3 manage.py createsuperuser
+python manage.py createsuperuser
 ```
 <p>O terminal exibirá algumas informações para vocẽ preencher, algo como: </p>
 
@@ -108,8 +107,15 @@ Superuser created successfully.
 <p>Após isso você pode usar o username e password para entrar no site de administração.</p>
 
 ```
-python3 manage.py runserver
+python manage.py runserver
 ```
 <p> Você verá que o serviço vai rodar no localhost na porta 8080, algo como http://127.0.0.1:8080/</p>
+<h3>Documentação da API </h3>
 <p> A documentação da API, os endpoints de acesso e suas descrições assim como os parâmetros de autenticação e envio das informações 
 podem ser vistos na documenta da API, presente em http://127.0.0.1:8080/documentation</p>
+
+<h3> Site de Administração </h3>
+<p>O site de administração do django está presente em http://127.0.0.1:8080/admin , nele você consegue ver como os dados estão sendo armazenados e é bem intuitivo </p>
+
+<h3> Link collection Postman </h3>
+<a href="https://drive.google.com/file/d/1aYVy-NAjYFcsJrVLKxLCQmMwQsx5vBV3/view?usp=sharing">link</a>
